@@ -1,4 +1,4 @@
-import Ship from "/ship.js"
+import Ship from "./ship.js"
 
 class Node {
     constructor(coo) {
@@ -17,13 +17,14 @@ export default class gameBoard {
         this.pieces = [];
         this.missed = null;
         this.hits = null;
+        this.generateBoard();
     }
 
     generateBoard(queue = [], node = null, x = 0, maxX = 7, y = 0) {
 
         if (x === maxX) {
-            [[2,Patrol], [3,Submarine], [3,Destroyer], [4,Battleship], [5,Carrier]].forEach(boat => {
-                this.pieces = push(new Ship(boat));
+            [[2,'Patrol'], [3,'Submarine'], [3,'Destroyer'], [4,'Battleship'], [5,'Carrier']].forEach(boat => {
+                this.pieces.push(new Ship(boat));
             });
             return;
         };
@@ -71,7 +72,7 @@ export default class gameBoard {
     };
 
     randomPlace() {
-        const MAX_TRIES = 20;
+        const MAX_TRIES = 100;
         const allNodes = []
         let nodeX = this.root;
         while (nodeX) {
@@ -92,47 +93,65 @@ export default class gameBoard {
         }
 
         const attemptBuild = () => {
-            this.pieces.forEach(boat => {
-                let randNode = getRandomNode();
-                let randDir = getRandomDir();
-                let tries = 0
+            let TotalTries = 0
+            while (TotalTries < MAX_TRIES) {
+                if (this.pieces.every(p => p.placed === true)) return;
+                for (let i = 0; i < this.pieces.length; i++) {
+                    const boat = this.pieces[i];
+                    if (boat.placed) continue;
 
-                while (tries < MAX_TRIES) {
-                    let currNode = randNode;
-                    let changeDir = false;
-                    const tempQueue = [];
-                    
-                    for (let i=0; i < boat.length; i++) {
-                        if (currNode.ship || (randDir === 0 ? !currNode.b : !currNode.r)) {
-                            tries++
-                            tempQueue.length = 0
-                            if (!changeDir) {
-                                changeDir = true;
-                                randDir = getRandomDir();
-                            } else {
-                                randNode = getRandomNode();
+                    let randNode = getRandomNode();
+                    let randDir = getRandomDir();
+                    let tries = 0
+
+                    while (tries < MAX_TRIES) {
+                        let currNode = randNode;
+                        let changeDir = false;
+                        const tempQueue = [];
+                        
+                        for (let j=0; j < boat.length; j++) {
+                            if (currNode.ship || (randDir === 0 ? !currNode.b : !currNode.r)) {
+                                tries++
+
+                                tempQueue.length = 0
+                                if (!changeDir) {
+                                    changeDir = true;
+                                    randDir = getRandomDir();
+                                } else {
+                                    randNode = getRandomNode();
+                                }
+                                break;
                             }
-                            break;
+
+                            tempQueue.push(currNode);                            
+                            currNode = randDir === 0 ? currNode.b : currNode.r;
                         }
 
-                        tempQueue.push(currNode);                            
-                        currNode = randDir === 0 ? currNode.b : currNode.r;
+                        if (tempQueue.length === boat.length) {
+                            boat.placed = true;
+                            tempQueue.forEach(n => n.ship = boat );
+                            break;
+                        }
                     }
-
-                    if (tempQueue.length === boat.length) {
-                        tempQueue.forEach(n => n.ship = boat);
-                        break;
-                    }
-                }
-                
-                if (tries >= MAX_TRIES) {
-                    allNodes.forEach(node => node.ship = null);
-                    return attemptBuild();
+                    
+                    if (tries >= MAX_TRIES) {
+                        allNodes.forEach(node => node.ship = null);
+                        this.pieces.forEach(b => b.placed = false);
+                        i -= 1
+                        TotalTries++
+                    }; 
+                };
+                if (TotalTries >= MAX_TRIES) {
+                    this.pieces.forEach(b => b.placed = false);
+                    return console.log(new Error("Maximum Tries to randomise board have been reach, try again."));
                 }; 
-            });
+            }
         };
 
         attemptBuild();
+        this.pieces.forEach(i => {console.log(`${i.name}: has been placed: ${i.placed}`)})
+        console.log(this.print());
+
     };
 
 
@@ -162,23 +181,21 @@ export default class gameBoard {
     }
 
     print() {
-        // (0,0 : x) - (1,0 : x)
+        // (0,0 : x ) - (1,0 : x)
         //     |           |
-        // (1,0 : x) - (1,1 : x)
+        // (1,0 : x ) - (1,1 : x)
         let msg = [];
         let nodeX = this.root;
         while (nodeX) {
             let nodeY = nodeX;
             let newMsg = [];
-            let breakMsg = [];
             while (nodeY) {
-                newMsg.push(`(${nodeY.coo} : ${nodeY.ship ? '𐂃' : '_ '})${nodeY.r ? ' - ' : ''}`);
-                if (nodeY.b) breakMsg.push(`    |${nodeY.r ? '        ' : ''}`);
+                newMsg.push(`(${nodeY.coo}) : ${nodeY.ship ? (nodeY.ship.sunk ? 'X' : `${nodeY.ship.name[0]} |`) : '  |'}`);
                 nodeY = nodeY.r
             };
             
             nodeX = nodeX.b;
-            msg.push(newMsg, breakMsg);
+            msg.push(newMsg);
         }
         
         return (msg.map(arr => arr.join(''))).join(' \n');

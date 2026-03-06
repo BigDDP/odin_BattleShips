@@ -9,42 +9,42 @@
 </head>
 <body>
     <h1>BattleShips Project</h1>
+
     <div>
         <div id="selection_container">
-            <form action="post">
+            <form method="post">
                 <fieldset>
                     <label for="p1_inp">Player 1: Name</label>
                     <input type="text" name="p1_inp" id="p1_inp" placeholder="Enter NameTag...">
                 </fieldset>
+
                 <fieldset>
                     <label for="p2_inp">Player 2: Name</label>
                     <input type="text" name="p2_inp" id="p2_inp" placeholder="Enter NameTag...">
                 </fieldset>
+
                 <fieldset>
                     <button type="submit" id="btn_comp">Play Against Computer</button>
                     <button type="submit" id="btn_plr">Play With a Friend</button>
                 </fieldset>
             </form>
         </div>
+
         <div class="legend_container">
             <div>
                 <h3>Player 1</h3>
                 <p>type...</p>
-                <div id="p1_ships">
-                    <!-- Ships Info -->
-                </div>
+                <div id="p1_ships"></div>
             </div>
+
             <div>
                 <h3>Player 2</h3>
                 <p>type...</p>
-                <div id="p2_ships">
-                    <!-- Ships Info -->
-                </div>
+                <div id="p2_ships"></div>
             </div>
         </div>
-        <div id="board_container">
-            <!-- BattleShip Boards-->
-        </div>
+
+        <div id="board_container"></div>
     </div>
 </body>
 </html>
