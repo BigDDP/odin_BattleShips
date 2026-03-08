@@ -1,4 +1,5 @@
 import Ship from "./ship.js"
+import {updatePlacement}  from "./dom.js"
 
 class Node {
     constructor(coo) {
@@ -71,7 +72,7 @@ export default class gameBoard {
         return this.nextNode(this.root, value);
     };
 
-    randomPlace() {
+    randomPlace(player) {
         const MAX_TRIES = 100;
         const allNodes = []
         let nodeX = this.root;
@@ -149,7 +150,10 @@ export default class gameBoard {
         };
 
         attemptBuild();
-        this.pieces.forEach(i => {console.log(`${i.name}: has been placed: ${i.placed}`)})
+        this.pieces.forEach(i => {
+            allNodes.filter(n => n.ship).forEach(item => updatePlacement(item.coo, this, player, "set"))
+            console.log(`${i.name}: has been placed: ${i.placed}`)
+        })
         console.log(this.print());
 
     };
@@ -181,9 +185,6 @@ export default class gameBoard {
     }
 
     print() {
-        // (0,0 : x ) - (1,0 : x)
-        //     |           |
-        // (1,0 : x ) - (1,1 : x)
         let msg = [];
         let nodeX = this.root;
         while (nodeX) {

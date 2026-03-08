@@ -1,0 +1,101 @@
+
+
+/* Board container — assumes a 10x10 grid */
+.board {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  gap: 2px;
+  width: 500px;
+  height: 500px;
+  background-color: #0a2a4a;
+  border: 3px solid #1a5276;
+  border-radius: 4px;
+  padding: 4px;
+  user-select: none;
+}
+
+/* Individual cell */
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1a6b9a;
+  border: 1px solid #1a5276;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.cell:hover {
+  background-color: #2e86c1;
+  transform: scale(1.05);
+}
+
+/* Wave tilde symbol */
+.cell p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #85c1e9;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* --- Cell states --- */
+
+/* Ship placed on this cell (own board) */
+.cell.ship {
+  background-color: #2e4057;
+}
+
+.cell.ship p {
+  color: #7f8c8d;
+}
+
+/* Successful hit */
+.cell.hit {
+  background-color: #c0392b;
+  cursor: default;
+}
+
+.cell.hit p {
+  color: #f1948a;
+  content: "✕";
+}
+
+.cell.hit p::before {
+  content: "✕";
+}
+
+/* Miss */
+.cell.miss {
+  background-color: #1a3a4a;
+  cursor: default;
+}
+
+.cell.miss p {
+  color: #aab7b8;
+}
+
+.cell.miss p::before {
+  content: "•";
+}
+
+/* Sunk ship */
+.cell.sunk {
+  background-color: #7b241c;
+  cursor: default;
+}
+
+.cell.sunk p::before {
+  content: "✕";
+  color: #f1948a;
+}
+
+/* Disable hover on already-targeted cells */
+.cell.hit:hover,
+.cell.miss:hover,
+.cell.sunk:hover {
+  transform: none;
+  background-color: inherit;
+}
