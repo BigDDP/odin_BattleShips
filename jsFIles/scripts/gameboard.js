@@ -5,6 +5,7 @@ class Node {
     constructor(coo) {
         this.ship = null;
         this.coo = coo;
+        this.hit = false;
         this.t = null;
         this.b = null;
         this.l = null;
@@ -158,9 +159,9 @@ export default class gameBoard {
 
     };
 
-
     receiveAttack(value) {
         const hitNode = this.getNode(value);
+        hitNode.hit = true;
         const coor = `[${hitNode.coo}]`
         const ship = hitNode.ship
         
@@ -171,8 +172,12 @@ export default class gameBoard {
                 this.hits.add(coor);
             };
 
-            const sunk = hitNode.hit();
-            if (sunk && this.pieces.every(b => b.sunk)) return true;
+            const sunk = ship.hit();
+            if (sunk) console.log(ship.name+" has been sunk.")
+            if (sunk && this.pieces.every(b => b.sunk)) {
+                console.log("Workflow Running")
+                return true
+            };
         } else {
             if (!this.missed) {
                 this.missed = new Set([coor]); 

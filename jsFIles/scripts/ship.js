@@ -9,11 +9,11 @@ export default class Ship {
 
     hit() {
         this.hits -= 1;
-        if (this.hits < 1) return this.isSunk();
-    }
-
-    isSunk() {
-        this.sunk = true;
-        return true;
+        if (this.hits < 1) {
+           this.sunk = true;
+            return true;
+        } else {
+            return false;
+        };
     }
 }

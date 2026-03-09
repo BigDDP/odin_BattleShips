@@ -2,7 +2,7 @@ import GameController from "./scripts/gameController.js"
 import Player from "./scripts/player.js"
 import GameBoard from "./scripts/gameboard.js"
 import ComPlay from "./scripts/computer.js"
-import buildBoard, {} from "./scripts/dom.js"
+import buildBoard, {makeVisible} from "./scripts/dom.js"
 import gameBoard, {} from "./scripts/gameboard.js"
 
 const game = new GameController();
@@ -29,5 +29,7 @@ formButtons.forEach(btn => {
         game.p2.board.randomPlace(game.p2.id);
 
         game.turn = game.p1;
+
+        makeVisible(game)
     });
 });
