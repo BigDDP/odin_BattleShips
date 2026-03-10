@@ -16,6 +16,7 @@ class Node {
 export default class gameBoard {
     constructor() {
         this.root = null;
+        this.allNodes = [];
         this.pieces = [];
         this.missed = null;
         this.hits = null;
@@ -81,6 +82,7 @@ export default class gameBoard {
             let nodeY = nodeX;
             while (nodeY) {
                 allNodes.push(nodeY);
+                this.allNodes.push(nodeY)
                 nodeY = nodeY.r
             };
             nodeX = nodeX.b;

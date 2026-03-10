@@ -1,3 +1,5 @@
+import computer from "./computer.js"
+
 export default class GameController {
     constructor() {
         this.turn = null;
@@ -9,6 +11,7 @@ export default class GameController {
 
     nextTurn() {
         this.turn = this.turn === this.p1 ? this.p2 : this.p1;
+        if (this.turn === this.p2 && this.p2.type === 0) computer(this);
     }
 
     gameover(winner) {

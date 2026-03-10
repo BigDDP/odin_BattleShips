@@ -55,7 +55,13 @@ export function updatePlacement(value, board, playerID, type) {
     cell.classList.add('visible');
 
     if (type === "set") cellP.textContent = node.ship.name[0]; 
-    if (type === "des") cellP.textContent = "X";
+    if (type === "des") {
+        if (node.ship) {
+            cellP.textContent = "𓊝"
+        } else {
+            cellP.textContent = "X"
+        };
+    }
 
 }
 

@@ -15,6 +15,8 @@ boardContainer.appendChild(boardEl);
 formButtons.forEach(btn => {
     btn.addEventListener("click", (btn) => {
         btn.preventDefault();
+        boardContainer.innerHTML = ''
+
         game.p1 = new Player((form.p1_inp.value ? form.p1_inp.value : "Player 1"), 1,new GameBoard(),1);
 
         let comp = btn.target.id === "btn_comp";
@@ -31,5 +33,6 @@ formButtons.forEach(btn => {
         game.turn = game.p1;
 
         makeVisible(game)
+        console.log(game)
     });
 });
