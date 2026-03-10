@@ -24,19 +24,18 @@ export default function play(game) {
     if (unhitNodes.length === 0) return new Error("All Nodes Hit");
     
     function revertDirectionState() {
-        if (state.direction === 'R') {
-            state.direction = 'L';
-            state.currentNode = state.beginningNode.l;
-        } else if (state.direction === 'L') {
-            state.direction = 'R';
-            state.currentNode = state.beginningNode.r;
-        } else if (state.direction === 'T') {
-            state.direction = 'B';
-            state.currentNode = state.beginningNode.b;
-        } else {
-            state.direction = 'T';
-            state.currentNode = state.beginningNode.t;
+        const opposites = { R: 'L', L: 'R', T: 'B', B: 'T' };
+        state.direction = opposites[state.direction];
+
+        const dirMap = { R: 'r', L: 'l', T: 't', B: 'b' };
+        const neighborKey = dirMap[state.direction];
+        const neighbor = state.beginningNode[neighborKey];
+
+        let node = neighbor;
+        while (node && node.hit) {
+            node = node[neighborKey];
         }
+        state.currentNode = node ?? null;
     }
 
     if (state.mode === 0) {
@@ -139,11 +138,18 @@ export default function play(game) {
                 state.direction = null;
                 state.beginningNode = null;
                 state.currentNode = null;
+                state.endNode = null; 
                 state.mode = 0;
             } else {
                 state.endNode = hitNode;
-
                 revertDirectionState();
+
+                if (!state.currentNode) {
+                    state.direction = null;
+                    state.beginningNode = null;
+                    state.endNode = null;
+                    state.mode = 0;
+                }
             }
         }
     }
