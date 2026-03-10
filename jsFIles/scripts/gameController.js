@@ -1,4 +1,4 @@
-import computer from "./computer.js"
+import ComPlay from "./computer.js"
 
 export default class GameController {
     constructor() {
@@ -11,7 +11,10 @@ export default class GameController {
 
     nextTurn() {
         this.turn = this.turn === this.p1 ? this.p2 : this.p1;
-        if (this.turn === this.p2 && this.p2.type === 0) computer(this);
+        if (this.turn === this.p2 && this.p2.type === 0) {
+            ComPlay(this);
+            this.turn = this.p1; 
+        }
     }
 
     gameover(winner) {

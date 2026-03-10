@@ -12,6 +12,7 @@ export default function buildBoard(player, game) {
             cell.classList.add("cell");
             cell.id = player.id+"_"+yNode.coo;
             cell.addEventListener("click", (e)=>{
+                console.log("Clicked, current turn:", game.turn.id, "currPlayer:", e.target.id.split("_")[0]);
                 const currPlayer = e.target.id.split("_")[0];
                 const coo = (e.target.id.split("_").at(-1)).split(",").map(Number);
                 const node = player.board.getNode(coo);
@@ -21,9 +22,10 @@ export default function buildBoard(player, game) {
                 if (Number(currPlayer) === Number(game.turn.id)) return console.log("This is not your board to interact with."); 
 
                 updatePlacement(coo, player.board, player.id, "des");
-                
+
                 let winner = player.board.receiveAttack(coo);
                 console.log("Winner: ", winner);
+                
                 if (winner) {
                     game.gameover(player);
                 } else {

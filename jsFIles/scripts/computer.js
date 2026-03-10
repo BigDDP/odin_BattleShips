@@ -154,8 +154,14 @@ export default function play(game) {
         }
     }
 
-    game.p1.board.receiveAttack(hitNode.coo);
+    let winner = game.p1.board.receiveAttack(hitNode.coo);
     updatePlacement(hitNode.coo, game.p1.board, game.p1.id, 'des');
 
-    game.nextTurn();
+    console.log("Winner: ", winner);
+    
+    if (winner) {
+        game.gameover(game.turn);
+    } else {
+        game.nextTurn();
+    };
 }
