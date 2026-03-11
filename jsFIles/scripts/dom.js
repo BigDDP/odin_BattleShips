@@ -30,22 +30,26 @@ export default function buildBoard(player, game) {
                     game.gameover(player);
                 } else {
                     game.nextTurn();
-                    if (game.p2.type === 0) return;
-                    makeVisible(game);
                 };
                 
             });
 
             const cellP = document.createElement('p');
-            cellP.textContent = "~";
+
+            if (yNode.ship) {
+                cellP.textContent = yNode.ship.name[0]
+            } else {
+                cellP.textContent = "~"
+            };
+
             cell.appendChild(cellP);
 
             bEl.appendChild(cell);
+
             yNode = yNode.r
         }
         xNode = xNode.b;
     }
-
     return bEl;
 }
 
@@ -53,10 +57,13 @@ export function updatePlacement(value, board, playerID, type) {
     const node = board.getNode(value);
 
     const cell = document.getElementById(playerID+"_"+node.coo);
-    const cellP = cell.firstChild;
+    const cellP = cell.querySelector('p'); // was cell.firstChild, which can be a text node
     cell.classList.add('visible');
 
-    if (type === "set") cellP.textContent = node.ship.name[0]; 
+    if (type === "set") {
+        if (!node.ship) return;
+        cellP.textContent = node.ship.name[0];
+    }; 
     if (type === "des") {
         if (node.ship) {
             cellP.textContent = "𓊝"
@@ -64,7 +71,6 @@ export function updatePlacement(value, board, playerID, type) {
             cellP.textContent = "X"
         };
     }
-
 }
 
 export function makeVisible(game) {

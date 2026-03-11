@@ -1,6 +1,5 @@
 import {updatePlacement} from "./dom.js" 
 
-const mode = {"hunt":0,"check":1,"run":2}
 const direction = ['L', 'R', 'T', 'B']
 
 const state = {
@@ -18,6 +17,7 @@ function getRandomNode(nodeArr) {
 }
 
 export default function play(game) {
+    console.log("ComPlay called, mode:", state.mode, "turn:", game.turn.id, "unhit:", game.p1.board.allNodes.filter(n => !n.hit).length);
     let hitNode;
     const hitNodes = game.p1.board.allNodes.filter(n => n.hit)
     const unhitNodes = game.p1.board.allNodes.filter(n => !n.hit);
@@ -45,7 +45,7 @@ export default function play(game) {
             state.direction = direction[Math.floor(Math.random() * 4)];
             state.beginningNode = hitNode;
             state.currentNode = hitNode;
-        };
+        }
     } else if (state.mode === 1) {
         let currNode = state.currentNode;
 
@@ -54,55 +54,42 @@ export default function play(game) {
             state.beginningNode = null;
             state.currentNode = null;
             state.mode = 0;
-            return hitNode = currNode;
-        }
+            hitNode = currNode;
+        } else {
+            let counter = 0;
 
-        let counter = 0;
-
-        while (counter < 4) {
-            if (state.direction === 'R') {
-                if (currNode.r && !currNode.r.hit) {
-                currNode = currNode.r;
-                break;
+            while (counter < 4) {
+                if (state.direction === 'R') {
+                    if (currNode.r && !currNode.r.hit) { currNode = currNode.r; break; }
+                    state.direction = 'L';
+                } else if (state.direction === 'L') {
+                    if (currNode.l && !currNode.l.hit) { currNode = currNode.l; break; }
+                    state.direction = 'T';
+                } else if (state.direction === 'T') {
+                    if (currNode.t && !currNode.t.hit) { currNode = currNode.t; break; }
+                    state.direction = 'B';
+                } else { 
+                    if (currNode.b && !currNode.b.hit) { currNode = currNode.b; break; }
+                    state.direction = 'R';
                 }
-                state.direction = 'L';
-            } else if (state.direction === 'L') {
-                if (currNode.l && !currNode.l.hit) {
-                currNode = currNode.l;
-                break;
-                }
-                state.direction = 'T';
-            } else if (state.direction === 'T') {
-                if (currNode.t && !currNode.t.hit) {
-                currNode = currNode.t;
-                break;
-                }
-                state.direction = 'B';
-            } else { 
-                if (currNode.b && !currNode.b.hit) {
-                currNode = currNode.b;
-                break;
-                }
-                state.direction = 'R';
+                counter++;
             }
 
-            counter++;
+            if (counter === 4) {
+                state.direction = null;
+                state.beginningNode = null;
+                state.currentNode = null;
+                state.mode = 0;
+                return play(game);
+            }
+
+            hitNode = currNode;
+
+            if (hitNode.ship) { 
+                state.mode = 2;
+                state.currentNode = hitNode;
+            }
         }
-
-        if (counter === 4) {
-            state.direction = null;
-            state.beginningNode = null;
-            state.currentNode = null;
-            state.mode = 0;
-            return play(game)
-        }
-
-        hitNode = currNode;
-
-        if (hitNode.ship) { 
-            state.mode = 2
-            state.currentNode = hitNode;
-        };
     } else {
         while (state.currentNode && state.currentNode.hit) {
             if (state.direction === 'R') {
@@ -124,7 +111,6 @@ export default function play(game) {
                 state.mode = 0;
             } else {
                 state.endNode = true;
-
                 revertDirectionState();
             }
 
@@ -154,14 +140,25 @@ export default function play(game) {
         }
     }
 
+    console.log(hitNode)
+
     let winner = game.p1.board.receiveAttack(hitNode.coo);
     updatePlacement(hitNode.coo, game.p1.board, game.p1.id, 'des');
 
     console.log("Winner: ", winner);
-    
+
+    // If the hit sank a ship, reset hunting state
+    if (hitNode.ship && hitNode.ship.sunk) {
+        state.mode = 0;
+        state.direction = null;
+        state.beginningNode = null;
+        state.currentNode = null;
+        state.endNode = null;
+    }
+
     if (winner) {
         game.gameover(game.turn);
     } else {
-        game.nextTurn();
-    };
+        game.turn = game.p1;
+    }
 }

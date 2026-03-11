@@ -1,9 +1,8 @@
 import GameController from "./scripts/gameController.js"
 import Player from "./scripts/player.js"
 import GameBoard from "./scripts/gameboard.js"
-import ComPlay from "./scripts/computer.js"
 import buildBoard, {makeVisible} from "./scripts/dom.js"
-import gameBoard, {} from "./scripts/gameboard.js"
+
 
 const game = new GameController();
 const form = document.querySelector("form");

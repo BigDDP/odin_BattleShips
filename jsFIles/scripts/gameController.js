@@ -13,7 +13,8 @@ export default class GameController {
         this.turn = this.turn === this.p1 ? this.p2 : this.p1;
         if (this.turn === this.p2 && this.p2.type === 0) {
             ComPlay(this);
-            this.turn = this.p1; 
+            // Removed: this.turn = this.p1
+            // ComPlay calls game.nextTurn() itself, which already flips back to p1
         }
     }
 

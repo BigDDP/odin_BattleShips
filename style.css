@@ -104,3 +104,121 @@
   transform: none;
   background-color: inherit;
 }
+
+#placement_overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    z-index: 100;
+    color: white;
+}
+
+#placement_controls {
+    display: flex;
+    gap: 1rem;
+}
+
+#rotate_btn,
+#confirm_placement {
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    background: #1a6fa3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+#rotate_btn:hover,
+#confirm_placement:hover:not(:disabled) {
+    background: #1589c8;
+}
+
+#confirm_placement:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+
+/* Ship tray */
+#ship_tray {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-end;
+    background: rgba(255,255,255,0.05);
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+}
+
+.tray_ship {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: grab;
+    user-select: none;
+}
+
+.tray_ship.placed_in_tray {
+    opacity: 0.25;
+    pointer-events: none;
+}
+
+.tray_ship span {
+    font-size: 0.7rem;
+    color: #aaa;
+    margin-top: 2px;
+}
+
+.ship_seg {
+    width: 28px;
+    height: 28px;
+    background: #2a7fc4;
+    border: 1px solid #4aa8e8;
+    border-radius: 3px;
+}
+
+/* Placement grid */
+#placement_grid_wrapper {
+    background: rgba(255,255,255,0.05);
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+#placement_grid {
+    display: grid;
+    grid-template-columns: repeat(7, 40px);
+    grid-template-rows: repeat(7, 40px);
+    /* 7x7 to match generateBoard maxX = 7 */
+    gap: 2px;
+}
+
+.placement_cell {
+    width: 40px;
+    height: 40px;
+    background: #0d3a54;
+    border: 1px solid #1a5a7a;
+    border-radius: 2px;
+    cursor: default;
+    transition: background 0.1s;
+}
+
+.placement_cell.placed {
+    background: #2a7fc4;
+    border-color: #4aa8e8;
+    cursor: grab;
+}
+
+.placement_cell.highlight_valid {
+    background: #2ecc71;
+    border-color: #27ae60;
+}
+
+.placement_cell.highlight_invalid {
+    background: #e74c3c;
+    border-color: #c0392b;
+}

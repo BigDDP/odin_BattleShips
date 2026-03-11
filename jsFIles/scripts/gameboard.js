@@ -23,6 +23,19 @@ export default class gameBoard {
         this.generateBoard();
     }
 
+    populateAllNodes() {
+        this.allNodes = [];
+        let xNode = this.root;
+        while (xNode) {
+            let yNode = xNode;
+            while (yNode) {
+                this.allNodes.push(yNode);
+                yNode = yNode.r;
+            }
+            xNode = xNode.b;
+        }
+    }
+
     generateBoard(queue = [], node = null, x = 0, maxX = 7, y = 0) {
 
         if (x === maxX) {
@@ -76,17 +89,9 @@ export default class gameBoard {
 
     randomPlace(player) {
         const MAX_TRIES = 100;
-        const allNodes = []
         let nodeX = this.root;
-        while (nodeX) {
-            let nodeY = nodeX;
-            while (nodeY) {
-                allNodes.push(nodeY);
-                this.allNodes.push(nodeY)
-                nodeY = nodeY.r
-            };
-            nodeX = nodeX.b;
-        }
+        this.populateAllNodes();         
+        const allNodes = this.allNodes;
 
         function getRandomNode() {
             return allNodes[Math.floor(Math.random() * allNodes.length)];
@@ -157,8 +162,6 @@ export default class gameBoard {
             allNodes.filter(n => n.ship).forEach(item => updatePlacement(item.coo, this, player, "set"))
             console.log(`${i.name}: has been placed: ${i.placed}`)
         })
-        console.log(this.print());
-
     };
 
     receiveAttack(value) {
