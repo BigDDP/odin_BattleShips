@@ -1,7 +1,7 @@
 import GameController from "./scripts/gameController.js"
 import Player from "./scripts/player.js"
 import GameBoard from "./scripts/gameboard.js"
-import buildBoard, { makeVisible } from "./scripts/dom.js"
+import buildBoard, { makeVisible, updateVisuals } from "./scripts/dom.js"
 import buildPlacementUI from "./scripts/shipPlacement.js"
 
 const game = new GameController();
@@ -9,11 +9,15 @@ const form = document.querySelector("form");
 form.addEventListener("submit", (e) => e.preventDefault());
 const formButtons = document.querySelectorAll("button");
 const boardContainer = document.getElementById("board_container");
+const formContainer = document.getElementById("selection_container");
 
 formButtons.forEach(btn => {
     btn.addEventListener("click", (e) => {
         e.preventDefault();
+
         boardContainer.innerHTML = '';
+        console.log(formContainer)
+        formContainer.style.display = "none"
 
         game.p1 = new Player((form.p1_inp.value || "Player 1"), 1, new GameBoard(), 1);
 
@@ -28,6 +32,7 @@ formButtons.forEach(btn => {
             game.p2.board.randomPlace(game.p2.id);
             game.turn = game.p1;
             makeVisible(game);
+            updateVisuals(game)
             
             console.log(game)
             console.log(game.p1.board.print());

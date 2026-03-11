@@ -1,4 +1,4 @@
-import {updatePlacement} from "./dom.js" 
+import {updatePlacement, updateVisuals} from "./dom.js" 
 
 const direction = ['L', 'R', 'T', 'B']
 
@@ -160,5 +160,6 @@ export default function play(game) {
         game.gameover(game.turn);
     } else {
         game.turn = game.p1;
+        updateVisuals(game);
     }
 }

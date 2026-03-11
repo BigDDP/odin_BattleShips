@@ -1,4 +1,5 @@
 import ComPlay from "./computer.js"
+import {updateVisuals, reset} from "./dom.js"
 
 export default class GameController {
     constructor() {
@@ -10,16 +11,26 @@ export default class GameController {
     }
 
     nextTurn() {
+        if (this.gameOver) return;
         this.turn = this.turn === this.p1 ? this.p2 : this.p1;
-        if (this.turn === this.p2 && this.p2.type === 0) {
-            ComPlay(this);
-            // Removed: this.turn = this.p1
-            // ComPlay calls game.nextTurn() itself, which already flips back to p1
-        }
+        if (this.turn === this.p2 && this.p2.type === 0) ComPlay(this);
+        updateVisuals(this);
     }
 
     gameover(winner) {
         this.gameOver = true;
         this.Winner = winner;
+
+        alert(winner.name+` has Won! All enemy ships have been destroyed.`);
+        this.reset();
+    }
+
+    reset() {
+        this.turn = null;
+        this.p1 = null;
+        this.p2 = null;
+        this.gameOver = false;
+        this.Winner = null;
+        reset()
     }
 }
